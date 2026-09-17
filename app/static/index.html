@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSentinel - AI Automated PR Review Agent</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="logo-shield">🛡️</div>
+                <div class="brand-text">
+                    <h1>CodeSentinel</h1>
+                    <span class="tagline">AI-Powered Automated PR Review Agent</span>
+                </div>
+            </div>
+            <div class="nav-controls">
+                <span class="status-indicator">
+                    <span class="pulse-dot"></span> Multi-Agent Engine Active
+                </span>
+                <a href="/docs" target="_blank" class="btn-link">API Docs</a>
+            </div>
+        </header>
+
+        <!-- Main Content Layout -->
+        <main class="dashboard-body">
+            <!-- Top Stats Banner -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-details">
+                        <span class="stat-label">PRs Reviewed</span>
+                        <h3 id="stat-total-prs">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon">🔒</div>
+                    <div class="stat-details">
+                        <span class="stat-label">Security Alerts</span>
+                        <h3 id="stat-security-count">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-details">
+                        <span class="stat-label">Performance Bottlenecks</span>
+                        <h3 id="stat-perf-count">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-icon">🎨</div>
+                    <div class="stat-details">
+                        <span class="stat-label">Style / PEP8 Issues</span>
+                        <h3 id="stat-style-count">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card score">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-details">
+                        <span class="stat-label">Avg Severity Index</span>
+                        <h3 id="stat-avg-score">0.0 <small>/ 100</small></h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Tabs -->
+            <div class="tab-bar">
+                <button class="tab-btn active" onclick="switchTab('simulator')">⚡ Interactive PR Simulator</button>
+                <button class="tab-btn" onclick="switchTab('history')">📜 Review History & Logs</button>
+            </div>
+
+            <!-- Tab 1: Interactive PR Simulator -->
+            <section id="tab-simulator" class="tab-content active">
+                <div class="simulator-layout">
+                    <!-- Left: Code Input & Presets -->
+                    <div class="editor-pane">
+                        <div class="pane-header">
+                            <h3>Code Diff Input</h3>
+                            <div class="preset-selector">
+                                <label for="preset-select">Load Example Preset:</label>
+                                <select id="preset-select" onchange="loadPreset(this.value)">
+                                    <option value="vulnerable_auth">🚨 Vulnerable Auth & Secret (Security)</option>
+                                    <option value="nested_loops">⚡ O(N^2) Loop & Memory Leak (Perf)</option>
+                                    <option value="pep8_issues">🎨 PEP8 & Type Hints (Style)</option>
+                                    <option value="clean_code">✨ Clean Code (Passing)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-metadata">
+                            <input type="text" id="sim-repo" value="acme/web-service" placeholder="Repository (owner/repo)">
+                            <input type="number" id="sim-pr" value="104" placeholder="PR #">
+                            <input type="text" id="sim-filename" value="app/auth_service.py" placeholder="Filename">
+                        </div>
+
+                        <textarea id="code-editor" spellcheck="false" placeholder="Paste python code or git diff patch here..."></textarea>
+
+                        <button id="btn-run-review" class="btn-primary" onclick="runPRSimulation()">
+                            <span>🛡️ Run 3-Pass Agent Review</span>
+                        </button>
+                    </div>
+
+                    <!-- Right: Live Review Results & Findings -->
+                    <div class="results-pane">
+                        <div class="pane-header">
+                            <h3>Review Results & Findings</h3>
+                            <span id="results-score-badge" class="badge-score hidden">Score: 0/100</span>
+                        </div>
+
+                        <div id="loading-spinner" class="loading-container hidden">
+                            <div class="spinner"></div>
+                            <p id="agent-step-text">Initializing AST Chunker & Multi-Agent Pipeline...</p>
+                        </div>
+
+                        <div id="results-empty" class="results-empty">
+                            <div class="empty-icon">🔍</div>
+                            <h4>No Review Run Yet</h4>
+                            <p>Select an example preset or paste code diff on the left, then click "Run 3-Pass Agent Review".</p>
+                        </div>
+
+                        <div id="results-content" class="results-content hidden">
+                            <div id="review-summary-card" class="summary-card"></div>
+                            
+                            <h4 class="findings-heading">Inline Findings & Recommendations</h4>
+                            <div id="findings-list" class="findings-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 2: Review History & Logs -->
+            <section id="tab-history" class="tab-content hidden">
+                <div class="history-pane">
+                    <div class="pane-header">
+                        <h3>Pull Request Review History</h3>
+                        <button class="btn-secondary" onclick="loadHistory()">🔄 Refresh History</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Repository & PR</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Severity Index</th>
+                                    <th>Findings Breakdown</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body">
+                                <tr>
+                                    <td colspan="7" class="text-center">Loading review history...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
