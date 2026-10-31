@@ -39,6 +39,7 @@ Do NOT include markdown wrapping or extra conversational text outside the JSON a
         # Check function naming / PEP8
         if chunk.chunk_type in ("function", "async_function"):
             if not re.match(r'^[a-z_][a-z0-9_]*$', chunk.name) and not chunk.name.startswith("__"):
+                snake_name = re.sub(r'([A-Z])', r'_\1', chunk.name).lower().lstrip('_')
                 findings.append({
                     "agent_type": self.category.value,
                     "severity": SeverityLevel.LOW.value,
@@ -46,7 +47,7 @@ Do NOT include markdown wrapping or extra conversational text outside the JSON a
                     "line_number": chunk.start_line,
                     "issue_title": f"PEP8 Naming Violation: `{chunk.name}`",
                     "description": f"Function name `{chunk.name}` should follow snake_case naming convention per PEP8.",
-                    "suggestion": f"def {re.sub(r'([A-Z])', r'_\1', chunk.name).lower().lstrip('_')}(...):",
+                    "suggestion": f"def {snake_name}(...):",
                     "code_snippet": lines[0] if lines else ""
                 })
 
