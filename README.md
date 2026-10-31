@@ -1,9 +1,13 @@
 # CodeSentinel - AI-Powered Automated PR Review Agent
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Online%20(Render)-brightgreen.svg)](https://codesentinel-g9em.onrender.com/)
+[![API Docs](https://img.shields.io/badge/API%20Docs-Swagger%20UI-blue.svg)](https://codesentinel-g9em.onrender.com/docs)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688.svg)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791.svg)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)](https://www.docker.com/)
+
+> 🌐 **Try the Live Simulator & Dashboard**: [https://codesentinel-g9em.onrender.com](https://codesentinel-g9em.onrender.com)  
+> 📚 **Interactive Swagger API Documentation**: [https://codesentinel-g9em.onrender.com/docs](https://codesentinel-g9em.onrender.com/docs)
 
 **CodeSentinel** is a production-ready Minimum Viable Product (MVP) automated Pull Request review agent. It integrates with GitHub webhooks and uses a **3-Pass Multi-Agent LLM Engine** paired with **AST Code Chunking** to deliver deep security, performance, and code style reviews.
 
